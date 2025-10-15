@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
@@ -20,6 +21,17 @@ namespace WindowsFormsApp1
             buttonDeleteCar.Click += ButtonDeleteCar_Click;
             buttonAddClient.Click += ButtonAddClient_Click;
             buttonAddSale.Click += ButtonAddSale_Click;
+
+            // Обработчики для сортировки и поиска
+            buttonSortCars.Click += ButtonSortCars_Click;
+            buttonSortClients.Click += ButtonSortClients_Click;
+            buttonSortSales.Click += ButtonSortSales_Click;
+            buttonSearchCars.Click += ButtonSearchCars_Click;
+            buttonSearchClients.Click += ButtonSearchClients_Click;
+            buttonSearchSales.Click += ButtonSearchSales_Click;
+            buttonClearSearchCars.Click += ButtonClearSearchCars_Click;
+            buttonClearSearchClients.Click += ButtonClearSearchClients_Click;
+            buttonClearSearchSales.Click += ButtonClearSearchSales_Click;
 
             // Добавляем тестовые данные
             AddTestData();
@@ -97,8 +109,7 @@ namespace WindowsFormsApp1
 
             if (string.IsNullOrEmpty(brand) || string.IsNullOrEmpty(model))
             {
-                MessageBox.Show("Введите марку и модель автомобиля!");
-                return;
+                MessageBox.Show("Введите марку и модель автомобиля!"); return;
             }
 
             if (string.IsNullOrEmpty(year)) year = "2024";
@@ -184,6 +195,128 @@ namespace WindowsFormsApp1
             {
                 MessageBox.Show("Выберите клиента и автомобиль!");
             }
+        }
+
+        // Функции сортировки
+        private void ButtonSortCars_Click(object sender, EventArgs e)
+        {
+            cars = cars.OrderBy(c => c).ToList();
+            UpdateDisplay();
+            MessageBox.Show("Автомобили отсортированы по алфавиту!");
+        }
+
+        private void ButtonSortClients_Click(object sender, EventArgs e)
+        {
+            clients = clients.OrderBy(c => c).ToList();
+            UpdateDisplay();
+            MessageBox.Show("Клиенты отсортированы по алфавиту!");
+        }
+
+        private void ButtonSortSales_Click(object sender, EventArgs e)
+        {
+            sales = sales.OrderBy(s => s).ToList();
+            UpdateDisplay();
+            MessageBox.Show("Продажи отсортированы по алфавиту!");
+        }
+
+        // Функции поиска
+        private void ButtonSearchCars_Click(object sender, EventArgs e)
+        {
+            string searchText = textBoxSearchCars.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(searchText))
+            {
+                MessageBox.Show("Введите текст для поиска автомобилей!");
+                return;
+            }
+
+            listBoxCars.Items.Clear(); foreach (string car in cars)
+            {
+                if (car.ToLower().Contains(searchText))
+                {
+                    listBoxCars.Items.Add(car);
+                }
+            }
+
+            int foundCount = listBoxCars.Items.Count;
+            labelCarCount.Text = $"Найдено автомобилей: {foundCount}";
+
+            if (foundCount == 0)
+            {
+                MessageBox.Show("Автомобили по вашему запросу не найдены!");
+            }
+        }
+
+        private void ButtonSearchClients_Click(object sender, EventArgs e)
+        {
+            string searchText = textBoxSearchClients.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(searchText))
+            {
+                MessageBox.Show("Введите текст для поиска клиентов!");
+                return;
+            }
+
+            listBoxClients.Items.Clear();
+            foreach (string client in clients)
+            {
+                if (client.ToLower().Contains(searchText))
+                {
+                    listBoxClients.Items.Add(client);
+                }
+            }
+
+            int foundCount = listBoxClients.Items.Count;
+            labelClientCount.Text = $"Найдено клиентов: {foundCount}";
+
+            if (foundCount == 0)
+            {
+                MessageBox.Show("Клиенты по вашему запросу не найдены!");
+            }
+        }
+
+        private void ButtonSearchSales_Click(object sender, EventArgs e)
+        {
+            string searchText = textBoxSearchSales.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(searchText))
+            {
+                MessageBox.Show("Введите текст для поиска продаж!");
+                return;
+            }
+
+            listBoxSales.Items.Clear();
+            foreach (string sale in sales)
+            {
+                if (sale.ToLower().Contains(searchText))
+                {
+                    listBoxSales.Items.Add(sale);
+                }
+            }
+
+            int foundCount = listBoxSales.Items.Count;
+            labelSaleCount.Text = $"Найдено продаж: {foundCount}";
+
+            if (foundCount == 0)
+            {
+                MessageBox.Show("Продажи по вашему запросу не найдены!");
+            }
+        }
+
+        // Функции очистки поиска
+        private void ButtonClearSearchCars_Click(object sender, EventArgs e)
+        {
+            textBoxSearchCars.Clear();
+            UpdateDisplay();
+        }
+
+        private void ButtonClearSearchClients_Click(object sender, EventArgs e)
+        {
+            textBoxSearchClients.Clear();
+            UpdateDisplay();
+        }
+
+        private void ButtonClearSearchSales_Click(object sender, EventArgs e)
+        {
+            textBoxSearchSales.Clear();
+            UpdateDisplay();
         }
     }
 }
